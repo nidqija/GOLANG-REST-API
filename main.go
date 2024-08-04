@@ -20,3 +20,27 @@ var activities =[]randomActivity{
     { ID : "5" , Title : "Wash your car" , Task : "Wash your car , your car reeks of stinky poo poo!" , Completed: false} ,
 
 }
+
+func getActivities(context *gin.Context){ 
+   context.IndentedJSON(http.StatusOK , activities)
+}
+
+func addActivities( context *gin.Context){
+	var newActivity randomActivity 
+
+	if err := context.BindJSON(&newActivity) ; err != nil {
+		return 
+	}
+
+	activities = append(activities , newActivity)
+
+	context.IndentedJSON(http.StatusCreated , newActivity)
+
+}
+
+func main(){
+	router := gin.Default()
+	router.GET("/activity"  , getActivities)
+	router.POST("/activity" , addActivities)
+	router.Run("localhost:9090")
+}
